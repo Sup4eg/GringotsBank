@@ -3,17 +3,21 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+//Класс для создания таблиц в базе данных и для того чтобы подсоединять к oracle через jdbc (java)
+
 public class ConnectionDB {
 
     public static void main(String[] argv) {
         try {
-            createDbClientTable();
-            createDbAddressTable();
+//            createDbClientTable();
+//            createDbAddressTable();
+            createDbWandsTable();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
+//    Метод для подсоединения к бд oracle через java
 
     public static Connection getDBConnection() {
 
@@ -36,6 +40,8 @@ public class ConnectionDB {
         }
         return dbConnection;
     }
+
+//    Создаем таблицу с клиентами
 
     private static void createDbClientTable() throws SQLException {
         Connection dbConnection = null;
@@ -85,6 +91,7 @@ public class ConnectionDB {
         }
     }
 
+//    Создаем таблицу с адресами
     private static void createDbAddressTable() throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
@@ -117,4 +124,39 @@ public class ConnectionDB {
             }
         }
     }
+
+//Создаем таблицу с волшебными палочками
+    private static void createDbWandsTable() throws SQLException {
+        Connection dbConnection = null;
+        Statement statement = null;
+
+        String createTableWandsSQL = "CREATE TABLE DBWands("
+                + "CLIENT_ID NUMBER(5) NOT NULL, "
+                + "LENGTH NUMBER(2) NOT NULL, "
+                + "WOOD VARCHAR(20) NOT NULL, "
+                + "CORE VARCHAR(20) NOT NULL, "
+                + "MADE_BY VARCHAR(20) NOT NULL, "
+                +  "UNIQUE (LENGTH, WOOD, CORE), "
+                + "CONSTRAINT fk_dbwands \n"
+                + "FOREIGN KEY (CLIENT_ID) \n"
+                + "REFERENCES DBUSER(CLIENT_ID) \n"
+                + ")";
+        try {
+            dbConnection = getDBConnection();
+            statement = dbConnection.createStatement();
+
+            statement.execute(createTableWandsSQL);
+            System.out.println("Table \"dbwands\" is created!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (dbConnection != null) {
+                dbConnection.close();
+            }
+        }
+    }
+
 }

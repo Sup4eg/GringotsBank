@@ -11,11 +11,15 @@ public class Registration {
     public static void main(String[] args) {
 //        insert client test
 //        insertClientSQL("Harry", "Potter", "Man", "half-blood", "Student", 4, "23.08.1996");
+
 //        insert Address test
 //        insertAddressSQL("Harry", "Potter", "Little Winging", "Privet Drive", null, 15, null);
+
 //        insert Wand parametrs test
+//        insertWandParametersSQL("Harry", "Potter", 10, "Ostrolist", "Phoenix Feather", "Garrick Ollivander");
     }
 
+//    Метод отправляет основную информацию о клиентах Gringots - строку в DBUSERS
     private static Boolean insertClientSQL(String first_name, String second_name, String sex, String blood_status,
                                            String job, int storage_level, String date_of_birth) {
 
@@ -38,30 +42,44 @@ public class Registration {
         return true;
     }
 
+    //    Метод отправляет информацию об адресе клиентов - строку в DBADDRESS
+
     private static Boolean insertAddressSQL(String first_name, String second_name, String city, String street, String area, Integer home, Integer flat) {
 
-        String selectClientIDSQL = String.format("SELECT CLIENT_ID from DBUSER WHERE FIRST_NAME='%s' AND SECOND_NAME='%s'", first_name, second_name);
-
+        String insertAddressSQL = "INSERT INTO DBADDRESS"
+                + "(CLIENT_ID, CITY, STREET, AREA, HOME, FLAT) " + "VALUES" + String.format("(%d,'%s','%s','%s',%d,%d)", getCurrentID(first_name, second_name), city, street, area, home, flat);
         try {
             Connection dbConnection = ConnectionDB.getDBConnection();
             Statement statement = dbConnection.createStatement();
-            ResultSet rs = statement.executeQuery(selectClientIDSQL);
-            Integer client_id = null;
-            while (rs.next()) {
-                client_id = Integer.parseInt(rs.getString("CLIENT_ID"));
-            }
-            String insertAddressSQL = "INSERT INTO DBADDRESS"
-                    + "(CLIENT_ID, CITY, STREET, AREA, HOME, FLAT) " + "VALUES" + String.format("(%d,'%s','%s','%s',%d,%d)", client_id, city, street, area, home, flat);
             statement.executeQuery(insertAddressSQL);
-
         } catch (SQLException e) {
-            System.out.println("Address wasn't insert");
+            System.out.println("Address wasn't inserted");
             System.out.println(e.getMessage());
             return false;
         }
-        System.out.println("Address is insert");
+        System.out.println("Address is inserted");
         return true;
     }
+
+    //    Метод отправляет информацию о палочке клиентов - строку в DBWANDS
+
+    private static Boolean insertWandParametersSQL(String first_name, String second_name, int length, String wood, String core, String made_by){
+        String insertWandParametersSQL = "INSERT INTO DBWANDS"
+                + "(CLIENT_ID, LENGTH, WOOD, CORE, MADE_BY) " + "VALUES" + String.format("(%d,%d,'%s','%s','%s')", getCurrentID(first_name, second_name), length, wood, core, made_by);
+        try {
+            Connection dbConnection = ConnectionDB.getDBConnection();
+            Statement statement = dbConnection.createStatement();
+            statement.executeQuery(insertWandParametersSQL);
+        } catch (SQLException e) {
+            System.out.println("Wand's parameters wasn't inserted");
+            System.out.println(e.getMessage());
+            return false;
+        }
+        System.out.println("Wand's parameters is inserted");
+        return true;
+    }
+
+//    Метод возвращает дату рождения в нужно формате
 
     private static String getCurrentTimeStamp(String date_of_birth) {
         DateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy");
@@ -72,5 +90,26 @@ public class Registration {
             e.printStackTrace();
         }
         return dateFormat.format(date);
+    }
+
+//    Метод возвращает идентификатор выбранного пользователя
+
+    private static Integer getCurrentID(String first_name, String second_name) {
+        String selectClientIDSQL = String.format("SELECT CLIENT_ID from DBUSER WHERE FIRST_NAME='%s' AND SECOND_NAME='%s'", first_name, second_name);
+        Integer client_id = null;
+        try {
+            Connection dbConnection = ConnectionDB.getDBConnection();
+            Statement statement = dbConnection.createStatement();
+            ResultSet rs = statement.executeQuery(selectClientIDSQL);
+            while (rs.next()) {
+                client_id = Integer.parseInt(rs.getString("CLIENT_ID"));
+            }
+            if (client_id == null) {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return client_id;
     }
 }
