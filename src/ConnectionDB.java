@@ -8,13 +8,14 @@ public class ConnectionDB {
     public static void main(String[] argv) {
         try {
             createDbClientTable();
+            createDbAddressTable();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
 
-    private static Connection getDBConnection() {
+    public static Connection getDBConnection() {
 
         final String DB_DRIVER = "oracle.jdbc.driver.OracleDriver";
         final String DB_CONNECTION = "jdbc:oracle:thin:@KirillTrezubov:1521:GRINGOTS";
@@ -28,7 +29,7 @@ public class ConnectionDB {
             System.out.println(e.getMessage());
         }
         try {
-            dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER,DB_PASSWORD);
+            dbConnection = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
             return dbConnection;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -47,9 +48,21 @@ public class ConnectionDB {
                 + "SEX VARCHAR(5) NOT NULL, "
                 + "BLOOD_STATUS VARCHAR(20) NOT NULL, "
                 + "JOB VARCHAR(20) NOT NULL, "
-                + "DATE_OF_BIRTH DATE NOT NULL, "
-                + "PRIMARY KEY (CLIENT_ID) "
+                + "STORAGE_LEVEL NUMBER(1) NOT NULL, "
+                + "DATE_OF_BIRTH DATE NOT NULL, " + "PRIMARY KEY (CLIENT_ID), "
+                + "CONSTRAINT db_user_unique UNIQUE (FIRST_NAME, SECOND_NAME) "
                 + ")";
+
+
+        String createClientSequence = "CREATE SEQUENCE client_seq START WITH 1";
+        String trigger_definition = "CREATE OR REPLACE TRIGGER client_bir \n" +
+                "BEFORE INSERT ON DBUSER \n" +
+                "FOR EACH ROW \n" +
+                "BEGIN \n" +
+                "SELECT client_seq.NEXTVAL \n" +
+                "INTO:new.client_id \n" +
+                "FROM dual; \n" +
+                "END;";
 
         try {
             dbConnection = getDBConnection();
@@ -57,6 +70,8 @@ public class ConnectionDB {
 
             // выполнить SQL запрос
             statement.execute(createTableSQL);
+            statement.execute(createClientSequence);
+            statement.execute(trigger_definition);
             System.out.println("Table \"dbuser\" is created!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -70,4 +85,36 @@ public class ConnectionDB {
         }
     }
 
+    private static void createDbAddressTable() throws SQLException {
+        Connection dbConnection = null;
+        Statement statement = null;
+
+        String createTableAddressSQL = "CREATE TABLE DBAddress("
+                + "CLIENT_ID NUMBER(5) NOT NULL, "
+                + "CITY VARCHAR(20) NOT NULL, "
+                + "STREET VARCHAR(20), "
+                + "AREA VARCHAR(20), "
+                + "HOME NUMBER(5), "
+                + "FLAT NUMBER(5), "
+                + "CONSTRAINT fk_dbuser \n"
+                + "FOREIGN KEY (CLIENT_ID) \n"
+                + "REFERENCES DBUSER(CLIENT_ID) \n"
+                + ")";
+        try {
+            dbConnection = getDBConnection();
+            statement = dbConnection.createStatement();
+
+            statement.execute(createTableAddressSQL);
+            System.out.println("Table \"dbaddress\" is created!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (dbConnection != null) {
+                dbConnection.close();
+            }
+        }
+    }
 }
