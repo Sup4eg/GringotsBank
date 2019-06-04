@@ -8,13 +8,13 @@ import java.sql.Statement;
 public class ConnectionDB {
 
     public static void main(String[] argv) {
-//        try {
-//            createDbClientTable();
-//            createDbAddressTable();
-//            createDbWandsTable()
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            createDbClientTable();
+            createDbAddressTable();
+            createDbWandsTable();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 //    Метод для подсоединения к бд oracle через java
@@ -55,18 +55,29 @@ public class ConnectionDB {
                 + "BLOOD_STATUS VARCHAR(20) NOT NULL, "
                 + "JOB VARCHAR(20) NOT NULL, "
                 + "STORAGE_LEVEL NUMBER(1) NOT NULL, "
-                + "DATE_OF_BIRTH DATE NOT NULL, " + "PRIMARY KEY (CLIENT_ID), "
+                + "DATE_OF_BIRTH DATE NOT NULL, "
+                + "STORAGE NUMBER(5) NOT NULL, "+ "PRIMARY KEY (CLIENT_ID), "
                 + "CONSTRAINT db_user_unique UNIQUE (FIRST_NAME, SECOND_NAME) "
                 + ")";
 
 
         String createClientSequence = "CREATE SEQUENCE client_seq START WITH 1";
-        String trigger_definition = "CREATE OR REPLACE TRIGGER client_bir \n" +
+        String createStorageSequence = "CREATE SEQUENCE storage_seq START WITH 100";
+        String trigger_definition_id = "CREATE OR REPLACE TRIGGER client_bir \n" +
                 "BEFORE INSERT ON DBUSER \n" +
                 "FOR EACH ROW \n" +
                 "BEGIN \n" +
                 "SELECT client_seq.NEXTVAL \n" +
                 "INTO:new.client_id \n" +
+                "FROM dual; \n" +
+                "END;";
+
+        String trigger_definition_storage = "CREATE OR REPLACE TRIGGER storage_bir \n" +
+                "BEFORE INSERT ON DBUSER \n" +
+                "FOR EACH ROW \n" +
+                "BEGIN \n" +
+                "SELECT storage_seq.NEXTVAL \n" +
+                "INTO:new.storage \n" +
                 "FROM dual; \n" +
                 "END;";
 
@@ -77,7 +88,9 @@ public class ConnectionDB {
             // выполнить SQL запрос
             statement.execute(createTableSQL);
             statement.execute(createClientSequence);
-            statement.execute(trigger_definition);
+            statement.execute(createStorageSequence);
+            statement.execute(trigger_definition_id);
+            statement.execute(trigger_definition_storage);
             System.out.println("Table \"dbuser\" is created!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
