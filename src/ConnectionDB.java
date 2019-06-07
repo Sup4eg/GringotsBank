@@ -9,9 +9,10 @@ public class ConnectionDB {
 
     public static void main(String[] argv) {
         try {
-            createDbClientTable();
-            createDbAddressTable();
+//            createDbClientTable();
+//            createDbAddressTable();
             createDbWandsTable();
+            createDbCashTable();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -51,13 +52,15 @@ public class ConnectionDB {
                 + "CLIENT_ID NUMBER(5) NOT NULL, "
                 + "FIRST_NAME VARCHAR(20) NOT NULL, "
                 + "SECOND_NAME VARCHAR(20) NOT NULL, "
+                + "PATRONYMIC VARCHAR(20) NOT NULL, "
                 + "SEX VARCHAR(5) NOT NULL, "
                 + "BLOOD_STATUS VARCHAR(20) NOT NULL, "
                 + "JOB VARCHAR(20) NOT NULL, "
                 + "STORAGE_LEVEL NUMBER(1) NOT NULL, "
                 + "DATE_OF_BIRTH DATE NOT NULL, "
                 + "STORAGE NUMBER(5) NOT NULL, "+ "PRIMARY KEY (CLIENT_ID), "
-                + "CONSTRAINT db_user_unique UNIQUE (FIRST_NAME, SECOND_NAME) "
+                + "CONSTRAINT db_user_unique_name UNIQUE (FIRST_NAME, SECOND_NAME, PATRONYMIC), "
+                + "CONSTRAINT db_user_unique_storage UNIQUE (STORAGE) "
                 + ")";
 
 
@@ -170,6 +173,44 @@ public class ConnectionDB {
                 dbConnection.close();
             }
         }
+    }
+
+    private static void createDbCashTable() throws SQLException {
+        Connection dbConnection = null;
+        Statement statement = null;
+
+        String createTableCashSQL = "CREATE TABLE DBCASH("
+                + "CLIENT_ID NUMBER(5) NOT NULL, "
+                + "STORAGE NUMBER(5) NOT NULL, "
+                + "FIRST_NAME VARCHAR(20) NOT NULL, "
+                + "SECOND_NAME VARCHAR(20) NOT NULL, "
+                + "PATRONYMIC VARCHAR(20) NOT NULL, "
+                + "CASH_NUMBER VARCHAR(30) NOT NULL, "
+                + "GALLEONS NUMBER(5) NOT NULL, "
+                + "SECLES NUMBER(5) NOT NULL, "
+                + "KNATS NUMBER(5) NOT NULL, "
+                + "CONSTRAINT fk_dbcash \n"
+                + "FOREIGN KEY (CLIENT_ID) \n"
+                + "REFERENCES DBUSER(CLIENT_ID) \n"
+                + ")";
+
+        try {
+            dbConnection = getDBConnection();
+            statement = dbConnection.createStatement();
+
+            statement.execute(createTableCashSQL);
+            System.out.println("Table \"dbcash\" is created!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (dbConnection != null) {
+                dbConnection.close();
+            }
+        }
+
     }
 
 }

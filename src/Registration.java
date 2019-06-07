@@ -12,7 +12,7 @@ public class Registration {
     public static void main(String[] args) {
         Registration reg = new Registration();
 //        insert client test
-//        reg.insertClientSQL("Harry", "Potter", "Man", "half-blood", "Student", 4, "23.08.1996");
+        reg.insertClientSQL("Harry", "Potter", "James", "Man", "half-blood", "Student", 3, "23.08.1996");
 
 //        insert Address test
 //        reg.insertAddressSQL("Harry", "Potter", "Little Winging", "Privet Drive", null, 15, null);
@@ -22,12 +22,12 @@ public class Registration {
     }
 
 //    Метод отправляет основную информацию о клиентах Gringots - строку в DBUSERS
-    public Boolean insertClientSQL(String first_name, String second_name, String sex, String blood_status,
+    private Boolean insertClientSQL(String first_name, String second_name, String patronymic, String sex, String blood_status,
                                            String job, int storage_level, String date_of_birth) {
 
         String insertTableSQL = "INSERT INTO DBUSER"
-                + "(FIRST_NAME, SECOND_NAME, SEX, BLOOD_STATUS, JOB, STORAGE_LEVEL, DATE_OF_BIRTH) " + "VALUES"
-                + String.format("('%s','%s','%s','%s','%s','%s', to_date('%s', '%s'))", first_name, second_name, sex, blood_status,
+                + "(FIRST_NAME, SECOND_NAME, PATRONYMIC, SEX, BLOOD_STATUS, JOB, STORAGE_LEVEL, DATE_OF_BIRTH) " + "VALUES"
+                + String.format("('%s','%s','%s','%s','%s','%s','%s', to_date('%s', '%s'))", first_name, second_name, patronymic, sex, blood_status,
                 job, storage_level, getCurrentTimeStamp(date_of_birth), "dd.mm.yyyy");
 
         try {
@@ -46,7 +46,7 @@ public class Registration {
 
     //    Метод отправляет информацию об адресе клиентов - строку в DBADDRESS
 
-    public Boolean insertAddressSQL(String first_name, String second_name, String city, String street, String area, Integer home, Integer flat) {
+    private Boolean insertAddressSQL(String first_name, String second_name, String city, String street, String area, Integer home, Integer flat) {
 
         String insertAddressSQL = "INSERT INTO DBADDRESS"
                 + "(CLIENT_ID, CITY, STREET, AREA, HOME, FLAT) " + "VALUES" + String.format("(%d,'%s','%s','%s',%d,%d)", getCurrentID(first_name, second_name), city, street, area, home, flat);
@@ -65,7 +65,7 @@ public class Registration {
 
     //    Метод отправляет информацию о палочке клиентов - строку в DBWANDS
 
-    public Boolean insertWandParametersSQL(String first_name, String second_name, int length, String wood, String core, String made_by){
+    private Boolean insertWandParametersSQL(String first_name, String second_name, int length, String wood, String core, String made_by){
         String insertWandParametersSQL = "INSERT INTO DBWANDS"
                 + "(CLIENT_ID, LENGTH, WOOD, CORE, MADE_BY) " + "VALUES" + String.format("(%d,%d,'%s','%s','%s')", getCurrentID(first_name, second_name), length, wood, core, made_by);
         try {
