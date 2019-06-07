@@ -1,10 +1,13 @@
-public class Storage {
+public class Storage extends Registration {
     public static void main(String[] args) {
 
     }
 
-    public Boolean acceptLevel() {
+//    public int[] showBalance() {
+//
+//    }
+
+    private Boolean putAllClientsToCashSQL() {
         return true;
     }
-
 }

@@ -7,15 +7,15 @@ import java.sql.Statement;
 
 public class ConnectionDB {
 
-    public static void main(String[] argv) {
-        try {
+        public static void main(String[] argv) {
+//        try {
 //            createDbClientTable();
 //            createDbAddressTable();
-            createDbWandsTable();
-            createDbCashTable();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+//            createDbWandsTable();
+//            createDbCashTable();
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
 //    Метод для подсоединения к бд oracle через java
@@ -114,7 +114,7 @@ public class ConnectionDB {
 
         String createTableAddressSQL = "CREATE TABLE DBAddress("
                 + "CLIENT_ID NUMBER(5) NOT NULL, "
-                + "CITY VARCHAR(20) NOT NULL, "
+                + "CITY VARCHAR(20), "
                 + "STREET VARCHAR(20), "
                 + "AREA VARCHAR(20), "
                 + "HOME NUMBER(5), "
@@ -185,10 +185,10 @@ public class ConnectionDB {
                 + "FIRST_NAME VARCHAR(20) NOT NULL, "
                 + "SECOND_NAME VARCHAR(20) NOT NULL, "
                 + "PATRONYMIC VARCHAR(20) NOT NULL, "
-                + "CASH_NUMBER VARCHAR(30) NOT NULL, "
-                + "GALLEONS NUMBER(5) NOT NULL, "
-                + "SECLES NUMBER(5) NOT NULL, "
-                + "KNATS NUMBER(5) NOT NULL, "
+                + "CASH_NUMBER VARCHAR(30), "
+                + "GALLEONS NUMBER(5), "
+                + "SECLES NUMBER(5), "
+                + "KNATS NUMBER(5), "
                 + "CONSTRAINT fk_dbcash \n"
                 + "FOREIGN KEY (CLIENT_ID) \n"
                 + "REFERENCES DBUSER(CLIENT_ID) \n"
