@@ -8,14 +8,15 @@ import java.sql.Statement;
 public class ConnectionDB {
 
         public static void main(String[] argv) {
-//        try {
-//            createDbClientTable();
-//            createDbAddressTable();
-//            createDbWandsTable();
-//            createDbCashTable();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            ConnectionDB connection = new ConnectionDB();
+//            connection.createDbClientTable();
+//            connection.createDbAddressTable();
+//            connection.createDbWandsTable();
+//            connection.createDbCashTable();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 //    Метод для подсоединения к бд oracle через java
@@ -44,7 +45,7 @@ public class ConnectionDB {
 
 //    Создаем таблицу с клиентами
 
-    private static void createDbClientTable() throws SQLException {
+    private void createDbClientTable() throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
 
@@ -108,7 +109,7 @@ public class ConnectionDB {
     }
 
 //    Создаем таблицу с адресами
-    private static void createDbAddressTable() throws SQLException {
+    private void createDbAddressTable() throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
 
@@ -119,6 +120,7 @@ public class ConnectionDB {
                 + "AREA VARCHAR(20), "
                 + "HOME NUMBER(5), "
                 + "FLAT NUMBER(5), "
+                + "UNIQUE (CLIENT_ID), "
                 + "CONSTRAINT fk_dbuser \n"
                 + "FOREIGN KEY (CLIENT_ID) \n"
                 + "REFERENCES DBUSER(CLIENT_ID) \n"
@@ -142,7 +144,7 @@ public class ConnectionDB {
     }
 
 //Создаем таблицу с волшебными палочками
-    private static void createDbWandsTable() throws SQLException {
+    private void createDbWandsTable() throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
 
@@ -174,8 +176,8 @@ public class ConnectionDB {
             }
         }
     }
-
-    private static void createDbCashTable() throws SQLException {
+//Методо для создания таблицы по работе с ячейками
+    private void createDbCashTable() throws SQLException {
         Connection dbConnection = null;
         Statement statement = null;
 

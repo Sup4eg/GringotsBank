@@ -10,8 +10,8 @@ import java.util.Date;
 //Класс регистрациии пользователей в банке Гринготтс
 public class Registration {
 
-    private Connection dbConnection;
-    private Statement statement;
+    private Connection dbConnection = null;
+    private Statement statement = null;
 
     {
         try {
@@ -25,13 +25,13 @@ public class Registration {
     public static void main(String[] args) {
         Registration reg = new Registration();
 //        insert client test
-        reg.insertClientSQL("Bill", "Weasley", "Arthur", "Man", "pure-blood", "Spellman", 3, "23.08.1970");
+        reg.insertClientSQL("Fleur", "Weasley", "Isabella", "Woman", "half-man", "Spellwoman", 4, "30.03.1977");
 
 //        insert Address test
-        reg.insertAddressSQL("Bill", "Weasley", "Arthur", "Tinvort", null, "Kornuoll",  null, null);
+        reg.insertAddressSQL("Fleur", "Weasley", "Isabella", "Tinvort", null, "Kournuel",  null, null);
 
 //        insert Wand parametrs test
-//        reg.insertWandParametersSQL("Harry", "Potter", "James", 13, "Ostrolist", "Phoenix Feather", "Garrick Ollivander");
+        reg.insertWandParametersSQL("Fleur", "Weasley", "Isabella", 9, "Pink tree", "Villa hair", "Garrick Ollivander");
     }
 
 //    Метод отправляет основную информацию о клиентах Gringots - строку в DBUSERS
@@ -59,9 +59,14 @@ public class Registration {
 
     private Boolean insertAddressSQL(String first_name, String second_name, String patronymic, String city, String street, String area, Integer home, Integer flat) {
 
+        String insertAddressSQL_statement = "INSERT INTO DBADDRESS"
+                + "(CLIENT_ID, CITY, STREET, AREA, HOME, FLAT) " + "VALUES";
+        String insert_string;
 
         String insertAddressSQL = "INSERT INTO DBADDRESS"
-                + "(CLIENT_ID, CITY, STREET, AREA, HOME, FLAT) " + "VALUES" + String.format("(%d,'%s','%s','%s',%d,%d)", getCurrentID(first_name, second_name, patronymic), city, String.valueOf(street), String.valueOf(area), home, flat);
+                + "(CLIENT_ID, CITY, STREET, AREA, HOME, FLAT) " + "VALUES" +
+                String.format("(%d,'%s','%s','%s',%d,%d)", getCurrentParametr(first_name, second_name, patronymic, "dbuser", "CLIENT_ID"),
+                        city, street, area, home, flat).replace("'null'", "NULL");
         try {
             statement.executeQuery(insertAddressSQL);
         } catch (SQLException e) {
@@ -77,7 +82,7 @@ public class Registration {
 
     private Boolean insertWandParametersSQL(String first_name, String second_name, String patronymic, int length, String wood, String core, String made_by){
         String insertWandParametersSQL = "INSERT INTO DBWANDS"
-                + "(CLIENT_ID, LENGTH, WOOD, CORE, MADE_BY) " + "VALUES" + String.format("(%d,%d,'%s','%s','%s')", getCurrentID(first_name, second_name, patronymic), length, wood, core, made_by);
+                + "(CLIENT_ID, LENGTH, WOOD, CORE, MADE_BY) " + "VALUES" + String.format("(%d,%d,'%s','%s','%s')", getCurrentParametr(first_name, second_name, patronymic, "dbuser", "CLIENT_ID"), length, wood, core, made_by);
         try {
             statement.executeQuery(insertWandParametersSQL);
         } catch (SQLException e) {
@@ -104,13 +109,13 @@ public class Registration {
 
 //    Метод возвращает идентификатор выбранного пользователя
 
-    private Integer getCurrentID(String first_name, String second_name, String patronymic) {
-        String selectClientIDSQL = String.format("SELECT CLIENT_ID from DBUSER WHERE FIRST_NAME='%s' AND SECOND_NAME='%s' AND PATRONYMIC='%s'", first_name, second_name, patronymic);
+    public Integer getCurrentParametr(String first_name, String second_name, String patronymic, String table, String request) {
+        String selectClientIDSQL = String.format("SELECT %s from %s WHERE FIRST_NAME='%s' AND SECOND_NAME='%s' AND PATRONYMIC='%s'", request.toUpperCase(), table.toUpperCase(), first_name, second_name, patronymic);
         Integer client_id = null;
         try {
             ResultSet rs = statement.executeQuery(selectClientIDSQL);
             while (rs.next()) {
-                client_id = Integer.parseInt(rs.getString("CLIENT_ID"));
+                client_id = Integer.parseInt(rs.getString(request));
             }
             if (client_id == null) {
                 throw new SQLException();
