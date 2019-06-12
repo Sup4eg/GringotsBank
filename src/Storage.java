@@ -7,16 +7,6 @@ import java.util.ArrayList;
 public class Storage extends Registration {
 
     private Connection dbConnection = null;
-
-
-    public static void main(String[] args) {
-        Storage storage = new Storage();
-//        storage.insertClientToCashSQL("Fleur", "Weasley", "Isabella");
-//        storage.addMoneyToCashSQL("Fleur", "Weasley", "Isabella", 30, 210, 110);
-//        storage.getMoneyFromCashSQL("Fleur", "Weasley", "Isabella", 30, 10, 10);
-//        System.out.println(storage.getBalance("Fleur", "Weasley", "Isabella").toString());
-    }
-
     private Statement statement = null;
 
     {
@@ -27,6 +17,16 @@ public class Storage extends Registration {
             e.printStackTrace();
         }
     }
+
+
+    public static void main(String[] args) {
+        Storage storage = new Storage();
+//        storage.insertClientToCashSQL("Fleur", "Weasley", "Isabella");
+//        storage.addMoneyToCashSQL("Fleur", "Weasley", "Isabella", 30, 210, 110);
+//        storage.getMoneyFromCashSQL("Fleur", "Weasley", "Isabella", 30, 10, 10);
+//        System.out.println(storage.getBalance("Fleur", "Weasley", "Isabella").toString());
+    }
+
     //    Метод показывает текущий баланс в ячейке
 
     private ArrayList<Integer> getBalance(String first_name, String second_name, String patronymic) {

@@ -10,7 +10,7 @@ public class ConnectionDB {
         public static void main(String[] argv) {
         try {
             ConnectionDB connection = new ConnectionDB();
-            connection.createDbStorageJournal();
+            connection.createDbExchangeCurrency();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -245,6 +245,38 @@ public class ConnectionDB {
 
             statement.execute(createTableStorageJournalSQL);
             System.out.println("Table \"dbstorage_journal\" is created!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (dbConnection != null) {
+                dbConnection.close();
+            }
+        }
+    }
+
+    private void createDbExchangeCurrency() throws SQLException {
+        Connection dbConnection = null;
+        Statement statement = null;
+
+        String createTableExchangeCurrencySQL = "CREATE TABLE EXCHANGE_CURRENCY("
+                + "CURRENCY VARCHAR(3) NOT NULL, "
+                + "BALANCE_BEGINNING NUMBER(10) NOT NULL, "
+                + "PURCHASE_RATE NUMBER(6) NOT NULL, "
+                + "SELLING_RATE NUMBER(6) NOT NULL, "
+                + "REMAINDER NUMBER(10) NOT NULL, "
+                + "BOUGHT NUMBER(6) NOT NULL, "
+                + "SOLD NUMBER(6) NOT NULL"
+                + ")";
+
+        try {
+            dbConnection = getDBConnection();
+            statement = dbConnection.createStatement();
+
+            statement.execute(createTableExchangeCurrencySQL);
+            System.out.println("Table \"dbexchange_currency\" is created!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
