@@ -16,6 +16,7 @@ public class Storage extends Registration {
 //        storage.getMoneyFromCashSQL("Fleur", "Weasley", "Isabella", 30, 10, 10);
 //        System.out.println(storage.getBalance("Fleur", "Weasley", "Isabella").toString());
     }
+
     private Statement statement = null;
 
     {
@@ -27,13 +28,20 @@ public class Storage extends Registration {
         }
     }
 
-    private class UpdateArgument<T>{
-        private T argument;
-        UpdateArgument(T argument) {
-            this.argument = argument;
-        }
-        public T getArgument() {
-            return argument;
+    private ArrayList<Integer> getBalance(String first_name, String second_name, String patronymic) {
+
+        if (getCashPermission(first_name, second_name, patronymic)) {
+            int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
+            int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
+            int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
+            ArrayList<Integer> money = new ArrayList<Integer>();
+            money.add(current_galleons);
+            money.add(current_secles);
+            money.add(current_knats);
+            return money;
+        } else {
+            System.out.println("Access denied");
+            return null;
         }
     }
 
@@ -108,25 +116,16 @@ public class Storage extends Registration {
 
 //    Метод показывает текущий баланс в ячейке
 
-    private ArrayList<Integer> getBalance(String first_name, String second_name, String patronymic) {
-        try {
-            if (getCashPermission(first_name, second_name, patronymic)) {
-                int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
-                int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
-                int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
-                ArrayList<Integer> money = new ArrayList<Integer>();
-                money.add(current_galleons);
-                money.add(current_secles);
-                money.add(current_knats);
-                return money;
-            } else {
-                System.out.println("Access denied");
-                throw new Exception();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private class UpdateArgument<T> {
+        private T argument;
+
+        UpdateArgument(T argument) {
+            this.argument = argument;
         }
-        return null;
+
+        public T getArgument() {
+            return argument;
+        }
     }
 
     //Метод обновляет параметры в таблице
