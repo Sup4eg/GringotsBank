@@ -10,7 +10,7 @@ public class ConnectionDB {
         public static void main(String[] argv) {
         try {
             ConnectionDB connection = new ConnectionDB();
-            connection.createDbCashTable();
+            connection.createDbStorageJournal();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -223,6 +223,38 @@ public class ConnectionDB {
             }
         }
 
+    }
+
+    private void createDbStorageJournal() throws SQLException {
+        Connection dbConnection = null;
+        Statement statement = null;
+
+        String createTableStorageJournalSQL = "CREATE TABLE STORAGE_JOURNAL("
+                + "STORAGE NUMBER(5) NOT NULL, "
+                + "START_TIME DATE NOT NULL, "
+                + "END_TIME DATE, "
+                + "DATA DATE NOT NULL, "
+                + "CONSTRAINT fk_dbstorage_journal \n"
+                + "FOREIGN KEY (STORAGE) \n"
+                + "REFERENCES DBCASH(STORAGE) \n"
+                + ")";
+
+        try {
+            dbConnection = getDBConnection();
+            statement = dbConnection.createStatement();
+
+            statement.execute(createTableStorageJournalSQL);
+            System.out.println("Table \"dbstorage_journal\" is created!");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (dbConnection != null) {
+                dbConnection.close();
+            }
+        }
     }
 
 }

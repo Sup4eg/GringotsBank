@@ -27,6 +27,7 @@ public class Storage extends Registration {
             e.printStackTrace();
         }
     }
+    //    Метод показывает текущий баланс в ячейке
 
     private ArrayList<Integer> getBalance(String first_name, String second_name, String patronymic) {
 
@@ -114,8 +115,8 @@ public class Storage extends Registration {
         return true;
     }
 
-//    Метод показывает текущий баланс в ячейке
 
+// Класс generic для разных аргументов
     private class UpdateArgument<T> {
         private T argument;
 
