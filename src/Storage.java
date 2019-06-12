@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Storage extends Registration {
 
@@ -12,6 +13,8 @@ public class Storage extends Registration {
         Storage storage = new Storage();
 //        storage.insertClientToCashSQL("Fleur", "Weasley", "Isabella");
 //        storage.addMoneyToCashSQL("Fleur", "Weasley", "Isabella", 30, 210, 110);
+//        storage.getMoneyFromCashSQL("Fleur", "Weasley", "Isabella", 30, 10, 10);
+//        System.out.println(storage.getBalance("Fleur", "Weasley", "Isabella").toString());
     }
     private Statement statement = null;
 
@@ -71,20 +74,61 @@ public class Storage extends Registration {
 
     //Метод добавляет деньги в ячейку
 
-    private Boolean addMoneyToCashSQL(String first_name, String second_name, String patronymic, int galeons, int sicles, int knats) {
+    private Boolean addMoneyToCashSQL(String first_name, String second_name, String patronymic, int galleons, int sicles, int knats) {
         if (getCashPermission(first_name, second_name, patronymic)) {
-            int current_galeons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
+            int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
             int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
             int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
-            updateTable("dbcash", "galleons", new UpdateArgument<Integer>(current_galeons + galeons));
-            updateTable("dbcash", "secles", new UpdateArgument<Integer>(current_galeons + sicles));
-            updateTable("dbcash", "knats", new UpdateArgument<Integer>(current_galeons + knats));
+            updateTable("dbcash", "galleons", new UpdateArgument<Integer>(current_galleons + galleons));
+            updateTable("dbcash", "secles", new UpdateArgument<Integer>(current_secles + sicles));
+            updateTable("dbcash", "knats", new UpdateArgument<Integer>(current_knats + knats));
         } else {
             System.out.println("Access denied");
             return false;
         }
         return true;
     }
+
+    //Метод изымает деньги из ячейки
+
+    private Boolean getMoneyFromCashSQL(String first_name, String second_name, String patronymic, int galleons, int sicles, int knats) {
+        if (getCashPermission(first_name, second_name, patronymic)) {
+            int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
+            int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
+            int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
+            updateTable("dbcash", "galleons", new UpdateArgument<Integer>(current_galleons - galleons));
+            updateTable("dbcash", "secles", new UpdateArgument<Integer>(current_secles - sicles));
+            updateTable("dbcash", "knats", new UpdateArgument<Integer>(current_knats - knats));
+        } else {
+            System.out.println("Access denied");
+            return false;
+        }
+        return true;
+    }
+
+//    Метод показывает текущий баланс в ячейке
+
+    private ArrayList<Integer> getBalance(String first_name, String second_name, String patronymic) {
+        try {
+            if (getCashPermission(first_name, second_name, patronymic)) {
+                int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
+                int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
+                int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
+                ArrayList<Integer> money = new ArrayList<Integer>();
+                money.add(current_galleons);
+                money.add(current_secles);
+                money.add(current_knats);
+                return money;
+            } else {
+                System.out.println("Access denied");
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     //Метод обновляет параметры в таблице
 
     public Boolean updateTable(String table, String column, UpdateArgument<?> value) {
