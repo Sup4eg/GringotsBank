@@ -2,8 +2,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Journal extends Registration{
 
@@ -21,24 +23,33 @@ public class Journal extends Registration{
 
     public static void main(String[] args) {
         Journal storage_journal = new Journal();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        storage_journal.insertInParameters(new Registration().getCurrentParametr("Harry", "Potter", "James", "dbuser", "storage"),
-                Calendar.getInstance().getTime().toString(), Calendar.getInstance().getTime().toString());
+        storage_journal.insertInParameters(new Registration().getCurrentParametr("Fleur", "Weasley", "Isabella", "dbcash", "storage"),
+                storage_journal.getCurrentTimeStorage(new Date(),"dd.MM.yyyy hh:mm:ss"));
     }
 
-    private Boolean insertInParameters(int storage, String start_time, String data) {
+//    Метод вставляет инофрмацию при заходе в ячейку (storage, start_time)
+
+    private Boolean insertInParameters(int storage, String start_time) {
         String insertInData = "INSERT INTO STORAGE_JOURNAL"
-                + "(STORAGE, START_TIME, DATA) "
-                + "VALUES" + String.format("(%d, to_date('%s', 'dd.mm.yyyy'), to_date('%s', 'dd.mm.yyyy'))", storage, start_time, data);
+                + "(STORAGE, START_TIME) "
+                + "VALUES" + String.format("(%d, to_date('%s', 'dd.mm.yyyy hh:mi:ss'))", storage, start_time);
 
         try {
             statement.executeUpdate(insertInData);
+            System.out.println("Data was inserted !");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             System.out.println("Data wasn't insert to STORAGE_JOURNAL");
             return false;
         }
         return true;
+    }
+
+    //    Метод возвращает дату в нужном формате при работе с ячейкой хранилища
+
+    private String getCurrentTimeStorage(Date time, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(time);
     }
 
 }

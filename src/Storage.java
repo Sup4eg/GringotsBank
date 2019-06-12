@@ -88,9 +88,9 @@ public class Storage extends Registration {
             int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
             int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
             int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
-            updateTable("dbcash", "galleons", new UpdateArgument<Integer>(current_galleons + galleons));
-            updateTable("dbcash", "secles", new UpdateArgument<Integer>(current_secles + sicles));
-            updateTable("dbcash", "knats", new UpdateArgument<Integer>(current_knats + knats));
+            updateTable("dbcash", "galleons", new MultiArgument<Integer>(current_galleons + galleons));
+            updateTable("dbcash", "secles", new MultiArgument<Integer>(current_secles + sicles));
+            updateTable("dbcash", "knats", new MultiArgument<Integer>(current_knats + knats));
         } else {
             System.out.println("Access denied");
             return false;
@@ -105,9 +105,9 @@ public class Storage extends Registration {
             int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
             int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
             int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
-            updateTable("dbcash", "galleons", new UpdateArgument<Integer>(current_galleons - galleons));
-            updateTable("dbcash", "secles", new UpdateArgument<Integer>(current_secles - sicles));
-            updateTable("dbcash", "knats", new UpdateArgument<Integer>(current_knats - knats));
+            updateTable("dbcash", "galleons", new MultiArgument<Integer>(current_galleons - galleons));
+            updateTable("dbcash", "secles", new MultiArgument<Integer>(current_secles - sicles));
+            updateTable("dbcash", "knats", new MultiArgument<Integer>(current_knats - knats));
         } else {
             System.out.println("Access denied");
             return false;
@@ -115,23 +115,7 @@ public class Storage extends Registration {
         return true;
     }
 
-
-// Класс generic для разных аргументов
-    private class UpdateArgument<T> {
-        private T argument;
-
-        UpdateArgument(T argument) {
-            this.argument = argument;
-        }
-
-        public T getArgument() {
-            return argument;
-        }
-    }
-
-    //Метод обновляет параметры в таблице
-
-    public Boolean updateTable(String table, String column, UpdateArgument<?> value) {
+    public Boolean updateTable(String table, String column, MultiArgument<?> value) {
         String updateParametersInTable = String.format("UPDATE %s SET %s = '%s'", table.toUpperCase(), column, value.getArgument());
         try {
             statement.executeQuery(updateParametersInTable);
@@ -142,6 +126,21 @@ public class Storage extends Registration {
         }
         System.out.println("Parametrs was update");
         return true;
+    }
+
+    //Метод обновляет параметры в таблице
+
+// Класс generic для разных аргументов
+    private class MultiArgument<T> {
+        private T argument;
+
+        MultiArgument(T argument) {
+            this.argument = argument;
+        }
+
+        public T getArgument() {
+            return argument;
+        }
     }
 
 }

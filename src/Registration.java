@@ -98,7 +98,7 @@ public class Registration {
 
 //    Метод возвращает дату рождения в нужно формате
 
-    public String getCurrentTimeStamp(String time, String format) {
+    private String getCurrentTimeStamp(String time, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
         Date date = null;
         try {
