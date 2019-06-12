@@ -115,7 +115,11 @@ public class Registration {
         try {
             ResultSet rs = statement.executeQuery(selectClientIDSQL);
             while (rs.next()) {
-                client_id = Integer.parseInt(rs.getString(request));
+                if (rs.getString(request) == null) {
+                    client_id = 0;
+                } else {
+                    client_id = Integer.parseInt(rs.getString(request));
+                }
             }
             if (client_id == null) {
                 throw new SQLException();
