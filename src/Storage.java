@@ -23,7 +23,7 @@ public class Storage extends Registration {
     }
 
 
-//Методо для вставки параметров пользователя, другая часть полей заполняется вручную в таблец DBCASH
+//Метод для вставки параметров пользователя, другая часть полей заполняется вручную в таблец DBCASH
 
     private Boolean insertClientToCashSQL(String first_name, String second_name, String patronymic) {
 

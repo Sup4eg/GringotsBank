@@ -10,10 +10,7 @@ public class ConnectionDB {
         public static void main(String[] argv) {
         try {
             ConnectionDB connection = new ConnectionDB();
-//            connection.createDbClientTable();
-//            connection.createDbAddressTable();
-//            connection.createDbWandsTable();
-//            connection.createDbCashTable();
+            connection.createDbCashTable();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -187,20 +184,33 @@ public class ConnectionDB {
                 + "FIRST_NAME VARCHAR(20) NOT NULL, "
                 + "SECOND_NAME VARCHAR(20) NOT NULL, "
                 + "PATRONYMIC VARCHAR(20) NOT NULL, "
-                + "CASH_NUMBER VARCHAR(30), "
+                + "CASH_NUMBER NUMBER(21), "
                 + "GALLEONS NUMBER(5), "
                 + "SECLES NUMBER(5), "
                 + "KNATS NUMBER(5), "
+                +  "UNIQUE (CASH_NUMBER), "
                 + "CONSTRAINT fk_dbcash \n"
                 + "FOREIGN KEY (CLIENT_ID) \n"
                 + "REFERENCES DBUSER(CLIENT_ID) \n"
                 + ")";
+
+        String createCashSequence = "CREATE SEQUENCE cash_seq START WITH 1111111111110000000";
+        String trigger_definition_cash_number = "CREATE OR REPLACE TRIGGER cash_table_bir \n" +
+                "BEFORE INSERT ON DBCASH \n" +
+                "FOR EACH ROW \n" +
+                "BEGIN \n" +
+                "SELECT cash_seq.NEXTVAL \n" +
+                "INTO:new.CASH_NUMBER \n" +
+                "FROM dual; \n" +
+                "END;";
 
         try {
             dbConnection = getDBConnection();
             statement = dbConnection.createStatement();
 
             statement.execute(createTableCashSQL);
+            statement.execute(createCashSequence);
+            statement.execute(trigger_definition_cash_number);
             System.out.println("Table \"dbcash\" is created!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
