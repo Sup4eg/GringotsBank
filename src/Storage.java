@@ -5,11 +5,37 @@ import java.sql.Statement;
 
 public class Storage extends Registration {
 
+    private Connection dbConnection = null;
+
+
     public static void main(String[] args) {
         Storage storage = new Storage();
 //        storage.insertClientToCashSQL("Fleur", "Weasley", "Isabella");
 //        storage.addMoneyToCashSQL("Fleur", "Weasley", "Isabella", 30, 210, 110);
     }
+    private Statement statement = null;
+
+    {
+        try {
+            dbConnection = ConnectionDB.getDBConnection();
+            statement = dbConnection.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class UpdateArgument<T>{
+        private T argument;
+        UpdateArgument(T argument) {
+            this.argument = argument;
+        }
+        public T getArgument() {
+            return argument;
+        }
+    }
+
+
+//Метод для вставки параметров пользователя, другая часть полей заполняется вручную в таблец DBCASH
 
     private Boolean insertClientToCashSQL(String first_name, String second_name, String patronymic) {
 
@@ -36,27 +62,14 @@ public class Storage extends Registration {
         }
     }
 
-    private Connection dbConnection = null;
-    private Statement statement = null;
-
-    {
-        try {
-            dbConnection = ConnectionDB.getDBConnection();
-            statement = dbConnection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-//Метод для вставки параметров пользователя, другая часть полей заполняется вручную в таблец DBCASH
+    //Метод проверяет доступ человека к ячейке
 
     private Boolean getCashPermission(String first_name, String second_name, String patronymic) {
         int storage_level = getCurrentParametr(first_name, second_name, patronymic, "dbuser", "STORAGE_LEVEL");
         return storage_level == 4;
     }
 
-    //Метод проверяет доступ человека к ячейке
+    //Метод добавляет деньги в ячейку
 
     private Boolean addMoneyToCashSQL(String first_name, String second_name, String patronymic, int galeons, int sicles, int knats) {
         if (getCashPermission(first_name, second_name, patronymic)) {
@@ -72,8 +85,7 @@ public class Storage extends Registration {
         }
         return true;
     }
-
-    //Метод добавляет деньги в ячейку
+    //Метод обновляет параметры в таблице
 
     public Boolean updateTable(String table, String column, UpdateArgument<?> value) {
         String updateParametersInTable = String.format("UPDATE %s SET %s = '%s'", table.toUpperCase(), column, value.getArgument());
@@ -86,17 +98,6 @@ public class Storage extends Registration {
         }
         System.out.println("Parametrs was update");
         return true;
-    }
-    //Метод обновляет параметры в таблице
-
-    private class UpdateArgument<T>{
-        private T argument;
-        UpdateArgument(T argument) {
-            this.argument = argument;
-        }
-        public T getArgument() {
-            return argument;
-        }
     }
 
 }
