@@ -25,13 +25,13 @@ public class Registration {
     public static void main(String[] args) {
         Registration reg = new Registration();
 //        insert client test
-        reg.insertClientSQL("Fleur", "Weasley", "Isabella", "Woman", "half-man", "Spellwoman", 4, "30.03.1977");
+//        reg.insertClientSQL("Ronald", "Weasley", "Arthur", "Man", "pure-blood", "Student", 2, "30.03.1980");
 
 //        insert Address test
-        reg.insertAddressSQL("Fleur", "Weasley", "Isabella", "Tinvort", null, "Kournuel",  null, null);
+//        reg.insertAddressSQL("Ronald", "Weasley", "Arthur", null, null, "Ottery St. Catchpole",  null, null);
 
 //        insert Wand parametrs test
-        reg.insertWandParametersSQL("Fleur", "Weasley", "Isabella", 9, "Pink tree", "Villa hair", "Garrick Ollivander");
+//        reg.insertWandParametersSQL("Ronald", "Weasley", "Arthur", 14, "Willow", "Unicorn hair", "Garrick Ollivander");
     }
 
 //    Метод отправляет основную информацию о клиентах Gringots - строку в DBUSERS
@@ -40,18 +40,20 @@ public class Registration {
 
         String insertTableSQL = "INSERT INTO DBUSER"
                 + "(FIRST_NAME, SECOND_NAME, PATRONYMIC, SEX, BLOOD_STATUS, JOB, STORAGE_LEVEL, DATE_OF_BIRTH) " + "VALUES"
-                + String.format("('%s','%s','%s','%s','%s','%s','%s', to_date('%s', '%s'))", first_name, second_name, patronymic, sex, blood_status,
-                job, storage_level, getCurrentTimeStamp(date_of_birth), "dd.mm.yyyy");
+                + String.format("('%s','%s','%s','%s','%s','%s',%d, to_date('%s', '%s'))", first_name, second_name, patronymic, sex, blood_status,
+                job, storage_level, getCurrentTimeStamp(date_of_birth, "dd.mm.yyyy"), "dd.mm.yyyy");
 
         try {
             statement.executeUpdate(insertTableSQL);
+            System.out.println("Client is registrated");
         } catch (SQLException e) {
             if (e.getSQLState().equals("23000")) {
-                System.out.println("Client was registrated");
+                System.out.println("Client was already registrated");
                 return false;
+            } else {
+                e.printStackTrace();
             }
         }
-        System.out.println("Client is registrated");
         return true;
     }
 
@@ -96,11 +98,11 @@ public class Registration {
 
 //    Метод возвращает дату рождения в нужно формате
 
-    private String getCurrentTimeStamp(String date_of_birth) {
-        DateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy");
+    public String getCurrentTimeStamp(String time, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
         Date date = null;
         try {
-            date = dateFormat.parse("29.08.1996");
+            date = dateFormat.parse(time);
         } catch (ParseException e) {
             e.printStackTrace();
         }
