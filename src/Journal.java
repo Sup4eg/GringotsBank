@@ -1,9 +1,13 @@
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Journal extends Registration{
 
@@ -23,8 +27,9 @@ public class Journal extends Registration{
         Journal storage_journal = new Journal();
 //        storage_journal.insertInParameters(new Registration().getCurrentParametr("Fleur", "Weasley", "Isabella", "dbcash", "storage"),
 //                storage_journal.getCurrentTimeStorage(new Date(),"dd.MM.yyyy hh:mm:ss"));
-        storage_journal.insertOutParameters(new Registration().getCurrentParametr("Fleur", "Weasley", "Isabella", "dbcash", "storage"),
-                "13.06.2019 12:17:26", "27.02.2019 11:32:54");
+//        storage_journal.insertOutParameters(new Registration().getCurrentParametr("Fleur", "Weasley", "Isabella", "dbcash", "storage"),
+//                "13.06.2019 12:17:26", "27.02.2019 11:32:54");
+//        System.out.println(storage_journal.getJournal().toString());
     }
 
 //    Метод вставляет инофрмацию в журнал при заходе в ячейку (storage, start_time)
@@ -58,6 +63,27 @@ public class Journal extends Registration{
             return false;
         }
         return true;
+    }
+
+//    Метод возвращает все записи в журнале
+
+    private Map getJournal() {
+        String selectAllFromJournal = "SELECT * FROM STORAGE_JOURNAL";
+        Map<Integer, String[]> journal_map = new HashMap<Integer, String[]>();
+        int id_row = 0;
+        try {
+            ResultSet rs = statement.executeQuery(selectAllFromJournal);
+            while (rs.next()) {
+                String storage = rs.getString("STORAGE");
+                String start_time = rs.getString("START_TIME");
+                String end_time = rs.getString("END_TIME");
+                journal_map.put(id_row, new String[]{storage, start_time, end_time});
+                id_row ++;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return journal_map;
     }
 
     //    Метод возвращает дату в нужном формате при работе с ячейкой хранилища
