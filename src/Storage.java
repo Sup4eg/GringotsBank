@@ -116,7 +116,7 @@ public class Storage extends Registration {
     }
 
     public Boolean updateTable(String table, String column, MultiArgument<?> value) {
-        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s'", table.toUpperCase(), column, value.getArgument());
+        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s'", table.toUpperCase(), column.toUpperCase(), value.getArgument());
         try {
             statement.executeQuery(updateParametersInTable);
         } catch (SQLException e) {
@@ -131,7 +131,7 @@ public class Storage extends Registration {
     //Метод обновляет параметры в таблице
 
 // Класс generic для разных аргументов
-    private class MultiArgument<T> {
+    public class MultiArgument<T> {
         private T argument;
 
         MultiArgument(T argument) {

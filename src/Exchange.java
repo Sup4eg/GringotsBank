@@ -1,8 +1,9 @@
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Exchange {
+public class Exchange extends Storage {
 
     private Connection dbConnection = null;
     private Statement statement = null;
@@ -40,5 +41,32 @@ public class Exchange {
         }
         System.out.println("Currency data was inserted");
         return true;
+    }
+
+
+    //Метод делает обмен валюты
+
+    private Boolean changeMoney(String currency, int bought, int sold) {
+        int current_bought = getMoneyParameter(currency, "bought");
+        int current_sold = getMoneyParameter(currency, "sold");
+//        updateTable("exchange_currency", "bought", new MultiArgument<Integer>(bought + current_bought));
+//        updateTable("exchange_currency", "sold", new MultiArgument<Integer>(bought + current_sold));
+        return true;
+    }
+
+//    Метод получает числовой параметр из таблцы EXCHANGE_TABLE
+
+    private Integer getMoneyParameter(String currency, String column) {
+        String selectFromExchangeCurrentSQL = String.format("SELECT %s FROM EXCHANGE_TABLE WHERE CURRENCY = '%s'", column.toUpperCase(), currency.toUpperCase());
+        Integer parameter = null;
+        try {
+            ResultSet rs = statement.executeQuery(selectFromExchangeCurrentSQL);
+            while (rs.next()) {
+                parameter = Integer.parseInt(rs.getString(column));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return parameter;
     }
 }
