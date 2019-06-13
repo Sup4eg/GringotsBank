@@ -2,6 +2,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Exchange extends Storage {
 
@@ -23,6 +25,7 @@ public class Exchange extends Storage {
 //        exchange.insertDataToExchangeCurrencySQL("usd", 763800, 0.015, 0.017, 965350, 0, 0);
 //        exchange.insertDataToExchangeCurrencySQL("gbp", 940000, 0.012, 0.027, 1400000, 0, 0);
 //        exchange.insertDataToExchangeCurrencySQL("mag", 3750000, 0.034, 0.039, 2840000, 0, 0);
+        exchange.getExchangeCurrency();
     }
 
     //Метод для вставки данных в таблицу EXCHANGE_CURRENCY
@@ -53,6 +56,31 @@ public class Exchange extends Storage {
 //        updateTable("exchange_currency", "sold", new MultiArgument<Integer>(bought + current_sold));
         return true;
     }
+
+
+    //Метод возвращает все строки из таблицы EXCHANGE_CURRENCY
+
+    private Map getExchangeCurrency() {
+        String selectAllFromExchangeCurrencySQL = "SELECT * FROM EXCHANGE_CURRENCY";
+        Map <String, String[]> exchange_map = new HashMap<String, String[]>();
+        try {
+            ResultSet rs = statement.executeQuery(selectAllFromExchangeCurrencySQL);
+            while (rs.next()) {
+                String currency = rs.getString("CURRENCY");
+                String balance_beginning = rs.getString("BALANCE_BEGINNING");
+                String purchase_rate = rs.getString("PURCHASE_RATE");
+                String selling_rate = rs.getString("SELLING_RATE");
+                String remainder = rs.getString("REMAINDER");
+                String bought = rs.getString("BOUGHT");
+                String sold = rs.getString("SOLD");
+                exchange_map.put(currency, new String[]{balance_beginning, purchase_rate, selling_rate, remainder, bought, sold});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exchange_map;
+    }
+
 
 //    Метод получает числовой параметр из таблцы EXCHANGE_TABLE
 
