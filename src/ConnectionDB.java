@@ -8,12 +8,12 @@ import java.sql.Statement;
 public class ConnectionDB {
 
         public static void main(String[] argv) {
-        try {
-            ConnectionDB connection = new ConnectionDB();
-            connection.createDbExchangeCurrency();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+//        try {
+//            ConnectionDB connection = new ConnectionDB();
+//            connection.createDbExchangeCurrency();
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
 //    Метод для подсоединения к бд oracle через java

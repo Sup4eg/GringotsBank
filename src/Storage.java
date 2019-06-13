@@ -20,6 +20,7 @@ public class Storage extends Registration {
         }
     }
 
+    //Test
 
     public static void main(String[] args) {
         Storage storage = new Storage();

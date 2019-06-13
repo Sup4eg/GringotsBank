@@ -23,6 +23,7 @@ public class Journal extends Registration{
         }
     }
 
+//Test
     public static void main(String[] args) {
         Journal storage_journal = new Journal();
 //        storage_journal.insertInParameters(new Registration().getCurrentParametr("Fleur", "Weasley", "Isabella", "dbcash", "storage"),

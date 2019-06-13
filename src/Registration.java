@@ -22,6 +22,8 @@ public class Registration {
         }
     }
 
+    //Test
+
     public static void main(String[] args) {
         Registration reg = new Registration();
 //        insert client test
