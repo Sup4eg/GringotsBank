@@ -264,11 +264,12 @@ public class ConnectionDB {
         String createTableExchangeCurrencySQL = "CREATE TABLE EXCHANGE_CURRENCY("
                 + "CURRENCY VARCHAR(3) NOT NULL, "
                 + "BALANCE_BEGINNING NUMBER(10) NOT NULL, "
-                + "PURCHASE_RATE NUMBER(5,3) NOT NULL, "
-                + "SELLING_RATE NUMBER(5,3) NOT NULL, "
+                + "PURCHASE_RATE NUMBER(8,5) NOT NULL, "
+                + "SELLING_RATE NUMBER(8,5) NOT NULL, "
                 + "REMAINDER NUMBER(10) NOT NULL, "
                 + "BOUGHT NUMBER(6) NOT NULL, "
-                + "SOLD NUMBER(6) NOT NULL"
+                + "SOLD NUMBER(6) NOT NULL, "
+                + "UNIQUE (CURRENCY)"
                 + ")";
 
         try {

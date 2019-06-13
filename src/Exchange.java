@@ -21,10 +21,10 @@ public class Exchange extends Storage {
 
     public static void main(String[] args) {
         Exchange exchange = new Exchange();
-//        exchange.insertDataToExchangeCurrencySQL("rub", 1300280, 65.358, 66.004, 1120000, 0, 0);
-//        exchange.insertDataToExchangeCurrencySQL("usd", 763800, 0.015, 0.017, 965350, 0, 0);
-//        exchange.insertDataToExchangeCurrencySQL("gbp", 940000, 0.012, 0.027, 1400000, 0, 0);
-//        exchange.insertDataToExchangeCurrencySQL("mag", 3750000, 0.034, 0.039, 2840000, 0, 0);
+        exchange.insertDataToExchangeCurrencySQL("rub", 1300280, 0.00435, 0.00439, 1120000, 0, 0);
+        exchange.insertDataToExchangeCurrencySQL("usd", 763800, 0.01512, 0.01712, 965350, 0, 0);
+        exchange.insertDataToExchangeCurrencySQL("gbp", 940000, 0.20312, 0.22712, 1400000, 0, 0);
+        exchange.insertDataToExchangeCurrencySQL("mag", 3750000, 4.93012, 4.93912, 2840000, 0, 0); //Относитльно фунта стерлингов
         exchange.getExchangeCurrency();
     }
 
@@ -47,13 +47,18 @@ public class Exchange extends Storage {
     }
 
 
-    //Метод делает обмен валюты
+    //Метод делает обмен галлионов в любую валюту
 
-    private Boolean changeMoney(String currency, int bought, int sold) {
-        int current_bought = getMoneyParameter(currency, "bought");
-        int current_sold = getMoneyParameter(currency, "sold");
-//        updateTable("exchange_currency", "bought", new MultiArgument<Integer>(bought + current_bought));
-//        updateTable("exchange_currency", "sold", new MultiArgument<Integer>(bought + current_sold));
+    private Boolean changeGalleonsMoney(String to_money, int galleons) {
+        int current_sold = getMoneyParameter("mag", "sold") + galleons ;
+        int purchase_rate = getMoneyParameter(to_money, "purchase_rate");
+        int exchange_money = purchase_rate * galleons;
+        int current_bought = getMoneyParameter(to_money, "bought") + exchange_money;
+
+//        updateTable("exchange_currency", current_sold)
+
+
+
         return true;
     }
 

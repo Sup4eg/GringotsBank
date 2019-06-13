@@ -21,10 +21,10 @@ public class Storage extends Registration {
 
     public static void main(String[] args) {
         Storage storage = new Storage();
-//        storage.insertClientToCashSQL("Fleur", "Weasley", "Isabella");
-//        storage.addMoneyToCashSQL("Fleur", "Weasley", "Isabella", 30, 210, 110);
-//        storage.getMoneyFromCashSQL("Fleur", "Weasley", "Isabella", 30, 10, 10);
-//        System.out.println(storage.getBalance("Fleur", "Weasley", "Isabella").toString());
+//        storage.insertClientToCashSQL("Tom", "Riddle", "Marvollo");
+//        storage.addMoneyToCashSQL("Tom", "Riddle", "Marvollo", 30, 210, 110);
+//        storage.getMoneyFromCashSQL("Tom", "Riddle", "Marvollo", 30, 100, 100);
+//        System.out.println(storage.getBalance("Tom", "Riddle", "Marvollo").toString());
     }
 
     //    Метод показывает текущий баланс в ячейке
@@ -88,9 +88,10 @@ public class Storage extends Registration {
             int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
             int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
             int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
-            updateTable("dbcash", "galleons", new MultiArgument<Integer>(current_galleons + galleons));
-            updateTable("dbcash", "secles", new MultiArgument<Integer>(current_secles + sicles));
-            updateTable("dbcash", "knats", new MultiArgument<Integer>(current_knats + knats));
+            int storage = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "storage");
+            updateTable("dbcash", "galleons", new MultiArgument<Integer>(current_galleons + galleons), "storage", new MultiArgument<Integer>(storage));
+            updateTable("dbcash", "secles", new MultiArgument<Integer>(current_secles + sicles), "storage", new MultiArgument<Integer>(storage));
+            updateTable("dbcash", "knats", new MultiArgument<Integer>(current_knats + knats), "storage", new MultiArgument<Integer>(storage));
         } else {
             System.out.println("Access denied");
             return false;
@@ -105,9 +106,10 @@ public class Storage extends Registration {
             int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
             int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
             int current_knats = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "knats");
-            updateTable("dbcash", "galleons", new MultiArgument<Integer>(current_galleons - galleons));
-            updateTable("dbcash", "secles", new MultiArgument<Integer>(current_secles - sicles));
-            updateTable("dbcash", "knats", new MultiArgument<Integer>(current_knats - knats));
+            int storage = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "storage");
+            updateTable("dbcash", "galleons", new MultiArgument<Integer>(current_galleons - galleons), "storage", new MultiArgument<Integer>(storage));
+            updateTable("dbcash", "secles", new MultiArgument<Integer>(current_secles - sicles), "storage", new MultiArgument<Integer>(storage));
+            updateTable("dbcash", "knats", new MultiArgument<Integer>(current_knats - knats), "storage", new MultiArgument<Integer>(storage));
         } else {
             System.out.println("Access denied");
             return false;
@@ -115,16 +117,16 @@ public class Storage extends Registration {
         return true;
     }
 
-    public Boolean updateTable(String table, String column, MultiArgument<?> value) {
-        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s'", table.toUpperCase(), column.toUpperCase(), value.getArgument());
+    public Boolean updateTable(String table, String column, MultiArgument<?> value, String columt_id, MultiArgument<?> column_id_value) {
+        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'", table.toUpperCase(), column.toUpperCase(), value.getArgument(), columt_id.toUpperCase(), column_id_value.getArgument());
         try {
             statement.executeQuery(updateParametersInTable);
+            System.out.println("Parametrs was update");
         } catch (SQLException e) {
             System.out.println("Parameters wasn't update");
             System.out.println(e.getMessage());
             return false;
         }
-        System.out.println("Parametrs was update");
         return true;
     }
 
