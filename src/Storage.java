@@ -3,6 +3,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Storage extends Registration {
 
@@ -117,8 +119,16 @@ public class Storage extends Registration {
         return true;
     }
 
+    //Метод обновляет параметры в таблице
+
     public Boolean updateTable(String table, String column, MultiArgument<?> value, String columt_id, MultiArgument<?> column_id_value) {
-        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'", table.toUpperCase(), column.toUpperCase(), value.getArgument(), columt_id.toUpperCase(), column_id_value.getArgument());
+
+        String parse_value = value.getArgument().toString();
+        Pattern pattern =Pattern.compile("^[-+]?\\d+(\\.{0,1}(\\d+?))?$");
+        Matcher matcher = pattern.matcher(parse_value);
+
+        String check_parse_value = matcher.matches() ? parse_value.replace(".", ","): parse_value;
+        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'", table.toUpperCase(), column.toUpperCase(), check_parse_value , columt_id.toUpperCase(), column_id_value.getArgument());
         try {
             statement.executeQuery(updateParametersInTable);
             System.out.println("Parametrs was update");
@@ -130,7 +140,7 @@ public class Storage extends Registration {
         return true;
     }
 
-    //Метод обновляет параметры в таблице
+
 
 // Класс generic для разных аргументов
     public class MultiArgument<T> {
