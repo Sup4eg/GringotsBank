@@ -26,7 +26,7 @@ public class Exchange extends Storage {
 //        exchange.insertDataToExchangeCurrencySQL("gbp", 940000, 0.20312, 0.22712, 0, 0, 0);
 //        exchange.insertDataToExchangeCurrencySQL("mag", 3750000, 4.93012, 4.93912, 0, 0, 0); //Относитльно фунта стерлингов
 //        exchange.getExchangeCurrency();
-//        System.out.println(exchange.changeMoney("mag","gbp", 1234));
+//        System.out.println(exchange.changeMoney("mag","usd", 1234));
     }
 
     //Метод для вставки данных в таблицу EXCHANGE_CURRENCY
@@ -54,25 +54,25 @@ public class Exchange extends Storage {
 
         // увеличить покупку и продажу соответствующей валюты
 
-        double input_money_new_sold = getMoneyParameter(input_money, "sold").getArgument().doubleValue() + cost;
-        double input_money_bought = getMoneyParameter(input_money, "bought").getArgument().doubleValue();
+        double input_money_sold = getMoneyParameter(input_money, "sold").getArgument().doubleValue() ;
+        double input_money_new_bought = getMoneyParameter(input_money, "bought").getArgument().doubleValue() + cost;
 
         double purchase_rate = getMoneyParameter(to_money, "purchase_rate").getArgument().doubleValue();
         double exchange_money = (float) cost / purchase_rate;
 
-        double to_money_new_bought = getMoneyParameter(to_money, "bought").getArgument().doubleValue() + exchange_money;
-        double to_money_sold = getMoneyParameter(to_money, "sold").getArgument().doubleValue();
+        double to_money_bought = getMoneyParameter(to_money, "bought").getArgument().doubleValue() ;
+        double to_money_new_sold = getMoneyParameter(to_money, "sold").getArgument().doubleValue() + exchange_money;
 
-        updateTable("exchange_currency", "sold", new MultiArgument<Double>(input_money_new_sold), "currency", new MultiArgument<String>(input_money.toUpperCase()));
-        updateTable("exchange_currency", "bought", new MultiArgument<Double>(to_money_new_bought), "currency", new MultiArgument<String>(to_money.toUpperCase()));
+        updateTable("exchange_currency", "sold", new MultiArgument<Double>(to_money_new_sold), "currency", new MultiArgument<String>(to_money.toUpperCase()));
+        updateTable("exchange_currency", "bought", new MultiArgument<Double>(input_money_new_bought), "currency", new MultiArgument<String>(input_money.toUpperCase()));
 
         //обновить остаток
 
         double input_money_balance_beginning = getMoneyParameter(input_money, "balance_beginning").getArgument().doubleValue();
         double to_money_balance_beginning = getMoneyParameter(to_money, "balance_beginning").getArgument().doubleValue();
 
-        double new_input_money_remainder = input_money_balance_beginning + input_money_bought - input_money_new_sold;
-        double new_to_money_remainder = to_money_balance_beginning + to_money_new_bought - to_money_sold;
+        double new_input_money_remainder = input_money_balance_beginning + input_money_new_bought - input_money_sold;
+        double new_to_money_remainder = to_money_balance_beginning + to_money_bought - to_money_new_sold;
 
         updateTable("exchange_currency", "remainder", new MultiArgument<Double>(new_input_money_remainder), "currency", new MultiArgument<String>(input_money.toUpperCase()));
         updateTable("exchange_currency", "remainder", new MultiArgument<Double>(new_to_money_remainder), "currency", new MultiArgument<String>(to_money.toUpperCase()));
