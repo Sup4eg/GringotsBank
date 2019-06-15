@@ -31,7 +31,7 @@ public class Exchange extends Storage {
 
     //Метод для вставки данных в таблицу EXCHANGE_CURRENCY
 
-    private Boolean insertDataToExchangeCurrencySQL(String currency, int balance_beginning, double purchase_rate, double selling_rate, int remainder, int bought, int sold) {
+    public Boolean insertDataToExchangeCurrencySQL(String currency, int balance_beginning, double purchase_rate, double selling_rate, int remainder, int bought, int sold) {
         String insertDataToExchangeCurrencySQL = "INSERT INTO EXCHANGE_CURRENCY"
                 + "(CURRENCY, BALANCE_BEGINNING, PURCHASE_RATE, SELLING_RATE, REMAINDER, BOUGHT, SOLD) " + "VALUES" +
                 String.format("('%s',%d,%s,%s,%d,%d,%d)", currency.toUpperCase(), balance_beginning, String.valueOf(purchase_rate), String.valueOf(selling_rate), remainder, bought, sold);
@@ -50,7 +50,7 @@ public class Exchange extends Storage {
 
     //Метод делает обмен галлионов в любую валюту
 
-    private double changeMoney(String input_money, String to_money, int cost) {
+    public double changeMoney(String input_money, String to_money, int cost) {
 
         // увеличить покупку и продажу соответствующей валюты
 
@@ -83,7 +83,7 @@ public class Exchange extends Storage {
 
     //Метод возвращает все строки из таблицы EXCHANGE_CURRENCY
 
-    private Map getExchangeCurrency() {
+    public Map getExchangeCurrency() {
         String selectAllFromExchangeCurrencySQL = "SELECT * FROM EXCHANGE_CURRENCY";
         Map <String, String[]> exchange_map = new HashMap<String, String[]>();
         try {
@@ -106,7 +106,7 @@ public class Exchange extends Storage {
 
 //    Метод получает числовой (double или int) параметр из таблцы EXCHANGE_TABLE
 
-    private NumberArguments getMoneyParameter(String currency, String column) {
+    public NumberArguments getMoneyParameter(String currency, String column) {
         String selectFromExchangeCurrentSQL = String.format("SELECT %s FROM EXCHANGE_CURRENCY WHERE CURRENCY = '%s'", column.toUpperCase(), currency.toUpperCase());
         NumberArguments parameter = null;
         try {

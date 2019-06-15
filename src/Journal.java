@@ -35,7 +35,7 @@ public class Journal extends Registration{
 
 //    Метод вставляет инофрмацию в журнал при заходе в ячейку (storage, start_time)
 
-    private Boolean insertInParameters(int storage, String start_time) {
+    public Boolean insertInParameters(int storage, String start_time) {
         String insertInData = "INSERT INTO STORAGE_JOURNAL"
                 + "(STORAGE, START_TIME) "
                 + "VALUES" + String.format("(%d, to_date('%s', 'dd.mm.yyyy hh:mi:ss'))", storage, start_time);
@@ -53,7 +53,7 @@ public class Journal extends Registration{
 
     //    Метод вставляет инофрмацию в журнал при выходе из ячейки (storage, start_time)
 
-    private Boolean insertOutParameters(int Storage, String start_time, String end_time) {
+    public Boolean insertOutParameters(int Storage, String start_time, String end_time) {
         String updateParametersInTable = String.format("UPDATE STORAGE_JOURNAL SET END_TIME = to_date('%s', 'dd.mm.yyyy hh:mi:ss') WHERE START_TIME = to_date('%s', 'dd.mm.yyyy hh:mi:ss')", end_time, start_time);
         try {
             statement.executeUpdate(updateParametersInTable);
@@ -68,7 +68,7 @@ public class Journal extends Registration{
 
 //    Метод возвращает все записи в журнале
 
-    private Map getJournal() {
+    public Map getJournal() {
         String selectAllFromJournal = "SELECT * FROM STORAGE_JOURNAL";
         Map<Integer, String[]> journal_map = new HashMap<Integer, String[]>();
         int id_row = 0;
@@ -89,7 +89,7 @@ public class Journal extends Registration{
 
     //    Метод возвращает дату в нужном формате при работе с ячейкой хранилища
 
-    private String getCurrentTimeStorage(Date time, String format) {
+    public String getCurrentTimeStorage(Date time, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(time);
     }

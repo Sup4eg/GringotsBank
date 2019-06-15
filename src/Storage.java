@@ -32,7 +32,7 @@ public class Storage extends Registration {
 
     //    Метод показывает текущий баланс в ячейке
 
-    private ArrayList<Integer> getBalance(String first_name, String second_name, String patronymic) {
+    public ArrayList<Integer> getBalance(String first_name, String second_name, String patronymic) {
 
         if (getCashPermission(first_name, second_name, patronymic)) {
             int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
@@ -52,7 +52,7 @@ public class Storage extends Registration {
 
 //Метод для вставки параметров пользователя, другая часть полей заполняется вручную в таблец DBCASH
 
-    private Boolean insertClientToCashSQL(String first_name, String second_name, String patronymic) {
+    public Boolean insertClientToCashSQL(String first_name, String second_name, String patronymic) {
 
         int storage = getCurrentParametr(first_name, second_name, patronymic, "dbuser", "STORAGE");
         int client_id = getCurrentParametr(first_name, second_name, patronymic, "dbuser", "CLIENT_ID");
@@ -86,7 +86,7 @@ public class Storage extends Registration {
 
     //Метод добавляет деньги в ячейку
 
-    private Boolean addMoneyToCashSQL(String first_name, String second_name, String patronymic, int galleons, int sicles, int knats) {
+    public Boolean addMoneyToCashSQL(String first_name, String second_name, String patronymic, int galleons, int sicles, int knats) {
         if (getCashPermission(first_name, second_name, patronymic)) {
             int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
             int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");
@@ -104,7 +104,7 @@ public class Storage extends Registration {
 
     //Метод изымает деньги из ячейки
 
-    private Boolean getMoneyFromCashSQL(String first_name, String second_name, String patronymic, int galleons, int sicles, int knats) {
+    public Boolean getMoneyFromCashSQL(String first_name, String second_name, String patronymic, int galleons, int sicles, int knats) {
         if (getCashPermission(first_name, second_name, patronymic)) {
             int current_galleons = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "galleons");
             int current_secles = getCurrentParametr(first_name, second_name, patronymic, "dbcash", "secles");

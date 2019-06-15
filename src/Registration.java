@@ -37,7 +37,7 @@ public class Registration {
     }
 
 //    Метод отправляет основную информацию о клиентах Gringots - строку в DBUSERS
-    private Boolean insertClientSQL(String first_name, String second_name, String patronymic, String sex, String blood_status,
+    public Boolean insertClientSQL(String first_name, String second_name, String patronymic, String sex, String blood_status,
                                            String job, int storage_level, String date_of_birth) {
 
         String insertTableSQL = "INSERT INTO DBUSER"
@@ -61,7 +61,7 @@ public class Registration {
 
     //    Метод отправляет информацию об адресе клиентов - строку в DBADDRESS
 
-    private Boolean insertAddressSQL(String first_name, String second_name, String patronymic, String city, String street, String area, Integer home, Integer flat) {
+    public Boolean insertAddressSQL(String first_name, String second_name, String patronymic, String city, String street, String area, Integer home, Integer flat) {
 
         String insertAddressSQL_statement = "INSERT INTO DBADDRESS"
                 + "(CLIENT_ID, CITY, STREET, AREA, HOME, FLAT) " + "VALUES";
@@ -84,7 +84,7 @@ public class Registration {
 
     //    Метод отправляет информацию о палочке клиентов - строку в DBWANDS
 
-    private Boolean insertWandParametersSQL(String first_name, String second_name, String patronymic, int length, String wood, String core, String made_by){
+    public Boolean insertWandParametersSQL(String first_name, String second_name, String patronymic, int length, String wood, String core, String made_by){
         String insertWandParametersSQL = "INSERT INTO DBWANDS"
                 + "(CLIENT_ID, LENGTH, WOOD, CORE, MADE_BY) " + "VALUES" + String.format("(%d,%d,'%s','%s','%s')", getCurrentParametr(first_name, second_name, patronymic, "dbuser", "CLIENT_ID"), length, wood, core, made_by);
         try {
