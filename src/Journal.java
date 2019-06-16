@@ -29,7 +29,7 @@ public class Journal extends Registration{
 //                storage_journal.getCurrentTimeStorage(new Date(),"dd.MM.yyyy hh:mm:ss"));
 //        storage_journal.insertOutParameters(new Registration().getCurrentParametr("Fleur", "Weasley", "Isabella", "dbcash", "storage"),
 //                "13.06.2019 12:17:26", "27.02.2019 11:32:54");
-//        System.out.println(storage_journal.getJournal().toString());
+//        System.out.println(storage_journal.getJournalByDay("16.06.2019").toString());
     }
 
 //    Метод вставляет инофрмацию в журнал при заходе в ячейку (storage, start_time)
@@ -52,7 +52,7 @@ public class Journal extends Registration{
 
     //    Метод вставляет инофрмацию в журнал при выходе из ячейки (storage, start_time)
 
-    public Boolean insertOutParameters(int Storage, String start_time, String end_time) {
+    public Boolean insertOutParameters(int storage, String start_time, String end_time) {
         String updateParametersInTable = String.format("UPDATE STORAGE_JOURNAL SET END_TIME = to_date('%s', 'dd.mm.yyyy hh:mi:ss') WHERE START_TIME = to_date('%s', 'dd.mm.yyyy hh:mi:ss')", end_time, start_time);
         try {
             statement.executeUpdate(updateParametersInTable);
@@ -65,10 +65,10 @@ public class Journal extends Registration{
         return true;
     }
 
-//    Метод возвращает все записи в журнале
+//    Метод возвращает все записи в журнале за определенный день
 
-    public Map getJournal() {
-        String selectAllFromJournal = "SELECT * FROM STORAGE_JOURNAL";
+    public Map getJournalByDay(String day_data) {
+        String selectAllFromJournal = String.format("SELECT * FROM STORAGE_JOURNAL WHERE to_char(STORAGE_JOURNAL.START_TIME,'dd.mm.yyyy') = '%s'", day_data);
         Map<Integer, String[]> journal_map = new HashMap<Integer, String[]>();
         int id_row = 0;
         try {
@@ -81,7 +81,7 @@ public class Journal extends Registration{
                 id_row ++;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return journal_map;
     }

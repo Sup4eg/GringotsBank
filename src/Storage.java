@@ -28,6 +28,7 @@ public class Storage extends Registration {
 //        storage.addMoneyToCashSQL("Tom", "Riddle", "Marvollo", 30, 210, 110);
 //        storage.getMoneyFromCashSQL("Tom", "Riddle", "Marvollo", 30, 100, 100);
 //        System.out.println(storage.getBalance("Tom", "Riddle", "Marvollo").toString());
+//        System.out.println(storage.checkCashNumber("1111111111110000020"));
     }
 
     //    Метод показывает текущий баланс в ячейке
@@ -79,7 +80,7 @@ public class Storage extends Registration {
 
     //Метод проверяет доступ человека к ячейке
 
-    private Boolean getCashPermission(String first_name, String second_name, String patronymic) {
+    public Boolean getCashPermission(String first_name, String second_name, String patronymic) {
         int storage_level = getCurrentParametr(first_name, second_name, patronymic, "dbuser", "STORAGE_LEVEL");
         return storage_level == 4;
     }
@@ -125,11 +126,11 @@ public class Storage extends Registration {
     public Boolean updateTable(String table, String column, MultiArgument<?> value, String columt_id, MultiArgument<?> column_id_value) {
 
         String parse_value = value.getArgument().toString();
-        Pattern pattern =Pattern.compile("^[-+]?\\d+(\\.{0,1}(\\d+?))?$");
+        Pattern pattern = Pattern.compile("^[-+]?\\d+(\\.{0,1}(\\d+?))?$");
         Matcher matcher = pattern.matcher(parse_value);
 
-        String check_parse_value = matcher.matches() ? parse_value.replace(".", ","): parse_value;
-        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'", table.toUpperCase(), column.toUpperCase(), check_parse_value , columt_id.toUpperCase(), column_id_value.getArgument());
+        String check_parse_value = matcher.matches() ? parse_value.replace(".", ",") : parse_value;
+        String updateParametersInTable = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'", table.toUpperCase(), column.toUpperCase(), check_parse_value, columt_id.toUpperCase(), column_id_value.getArgument());
         try {
             statement.executeQuery(updateParametersInTable);
             System.out.println("Parametrs was update");
@@ -142,8 +143,26 @@ public class Storage extends Registration {
     }
 
 
+    // Метод проверяет наличие определенного чека в dbcash
 
-// Класс generic для разных аргументов
+    public boolean checkCashNumber(String cash_number) {
+        String selectCashNumberSQL = "SELECT CASH_NUMBER from DBCASH";
+        boolean isCashNumber = false;
+        try {
+            ResultSet rs = statement.executeQuery(selectCashNumberSQL);
+            while (rs.next()) {
+                if (rs.getString(1).equals(cash_number)) {
+                    isCashNumber = true;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return isCashNumber;
+    }
+
+
+    // Класс generic для разных аргументов
     public class MultiArgument<T> {
         private T argument;
 

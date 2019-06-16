@@ -236,7 +236,7 @@ public class ConnectionDB {
                 + "END_TIME DATE, "
                 + "CONSTRAINT fk_dbstorage_journal \n"
                 + "FOREIGN KEY (STORAGE) \n"
-                + "REFERENCES DBCASH(STORAGE) \n"
+                + "REFERENCES DBUSER(STORAGE) \n"
                 + ")";
 
         try {

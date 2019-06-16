@@ -129,7 +129,7 @@ public class Registration {
                 throw new SQLException();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return client_id;
     }
