@@ -28,7 +28,7 @@ public class Storage extends Registration {
 //        storage.addMoneyToCashSQL("Tom", "Riddle", "Marvollo", 30, 210, 110);
 //        storage.getMoneyFromCashSQL("Tom", "Riddle", "Marvollo", 30, 100, 100);
 //        System.out.println(storage.getBalance("Tom", "Riddle", "Marvollo").toString());
-//        System.out.println(storage.checkCashNumber("1111111111110000000"));
+//        System.out.println(storage.checkCashNumber("1111111111110000020").toString());
     }
 
     //    Метод показывает текущий баланс в ячейке
@@ -145,11 +145,11 @@ public class Storage extends Registration {
 
     // Метод проверяет наличие определенного чека в dbcash. Если чек есть, то возвращается номер хранилища, иначе null
 
-    public Integer checkCashNumber(String cash_number) {
+    public ArrayList<String> checkCashNumber(String cash_number) {
         String selectCashNumberSQL = "SELECT CASH_NUMBER from DBCASH";
-        String selectStorageSQL = String.format("SELECT STORAGE from DBCASH WHERE CASH_NUMBER = '%s'", cash_number);
+        String selectStorageSQL = String.format("SELECT FIRST_NAME, SECOND_NAME, PATRONYMIC from DBCASH WHERE CASH_NUMBER = '%s'", cash_number);
         boolean isCashNumber = false;
-        Integer storage = null;
+        ArrayList<String> name_arr = null;
         try {
             ResultSet rs_check = statement.executeQuery(selectCashNumberSQL);
             while (rs_check.next()) {
@@ -160,13 +160,16 @@ public class Storage extends Registration {
             if (isCashNumber) {
                 ResultSet rs_storage = statement.executeQuery(selectStorageSQL);
                 while (rs_storage.next()) {
-                    storage = Integer.parseInt(rs_storage.getString(1));
+                    name_arr = new ArrayList<String>();
+                    name_arr.add(rs_storage.getString("first_name"));
+                    name_arr.add(rs_storage.getString("second_name"));
+                    name_arr.add(rs_storage.getString("patronymic"));
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return storage;
+        return name_arr;
     }
 
 

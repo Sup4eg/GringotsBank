@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class Exchange extends Storage {
 //        exchange.insertDataToExchangeCurrencySQL("gbp", 940000, 0.20312, 0.22712, 0, 0, 0);
 //        exchange.insertDataToExchangeCurrencySQL("mag", 3750000, 4.93012, 4.93912, 0, 0, 0); //Относитльно фунта стерлингов
 //        exchange.getExchangeCurrency();
-//        System.out.println(exchange.changeMoney("mag","usd", 1234));
+        System.out.println(exchange.changeMoney("mag","usd", 1234));
     }
 
     //Метод для вставки данных в таблицу EXCHANGE_CURRENCY
@@ -52,7 +53,13 @@ public class Exchange extends Storage {
 
     public double changeMoney(String input_money, String to_money, int cost) {
 
+        //форматируем вывод
+        DecimalFormat number_format = new DecimalFormat("##.0000");
+
         // увеличить покупку и продажу соответствующей валюты
+        if (input_money.equals(to_money)) {
+            return cost;
+        }
 
         double input_money_sold = getMoneyParameter(input_money, "sold").getArgument().doubleValue() ;
         double input_money_new_bought = getMoneyParameter(input_money, "bought").getArgument().doubleValue() + cost;
@@ -77,7 +84,7 @@ public class Exchange extends Storage {
         updateTable("exchange_currency", "remainder", new MultiArgument<Double>(new_input_money_remainder), "currency", new MultiArgument<String>(input_money.toUpperCase()));
         updateTable("exchange_currency", "remainder", new MultiArgument<Double>(new_to_money_remainder), "currency", new MultiArgument<String>(to_money.toUpperCase()));
 
-        return exchange_money;
+        return Double.parseDouble(number_format.format(exchange_money).replace(",", "."));
     }
 
 

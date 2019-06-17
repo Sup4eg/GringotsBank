@@ -37,7 +37,7 @@ public class Journal extends Registration{
     public Boolean insertInParameters(int storage, String start_time) {
         String insertInData = "INSERT INTO STORAGE_JOURNAL"
                 + "(STORAGE, START_TIME) "
-                + "VALUES" + String.format("(%d, to_date('%s', 'dd.mm.yyyy hh:mi:ss'))", storage, start_time);
+                + "VALUES" + String.format("(%d, to_date('%s', 'dd.mm.yyyy hh24:mi:ss'))", storage, start_time);
 
         try {
             statement.executeUpdate(insertInData);
@@ -53,7 +53,7 @@ public class Journal extends Registration{
     //    Метод вставляет инофрмацию в журнал при выходе из ячейки (storage, start_time)
 
     public Boolean insertOutParameters(int storage, String start_time, String end_time) {
-        String updateParametersInTable = String.format("UPDATE STORAGE_JOURNAL SET END_TIME = to_date('%s', 'dd.mm.yyyy hh:mi:ss') WHERE START_TIME = to_date('%s', 'dd.mm.yyyy hh:mi:ss')", end_time, start_time);
+        String updateParametersInTable = String.format("UPDATE STORAGE_JOURNAL SET END_TIME = to_date('%s', 'dd.mm.yyyy hh24:mi:ss') WHERE START_TIME = to_date('%s', 'dd.mm.yyyy hh24:mi:ss')", end_time, start_time);
         try {
             statement.executeUpdate(updateParametersInTable);
             System.out.println("Out data was inserted !");
