@@ -28,7 +28,7 @@ public class Storage extends Registration {
 //        storage.addMoneyToCashSQL("Tom", "Riddle", "Marvollo", 30, 210, 110);
 //        storage.getMoneyFromCashSQL("Tom", "Riddle", "Marvollo", 30, 100, 100);
 //        System.out.println(storage.getBalance("Tom", "Riddle", "Marvollo").toString());
-//        System.out.println(storage.checkCashNumber("1111111111110000020"));
+//        System.out.println(storage.checkCashNumber("1111111111110000000"));
     }
 
     //    Метод показывает текущий баланс в ячейке
@@ -143,22 +143,30 @@ public class Storage extends Registration {
     }
 
 
-    // Метод проверяет наличие определенного чека в dbcash
+    // Метод проверяет наличие определенного чека в dbcash. Если чек есть, то возвращается номер хранилища, иначе null
 
-    public boolean checkCashNumber(String cash_number) {
+    public Integer checkCashNumber(String cash_number) {
         String selectCashNumberSQL = "SELECT CASH_NUMBER from DBCASH";
+        String selectStorageSQL = String.format("SELECT STORAGE from DBCASH WHERE CASH_NUMBER = '%s'", cash_number);
         boolean isCashNumber = false;
+        Integer storage = null;
         try {
-            ResultSet rs = statement.executeQuery(selectCashNumberSQL);
-            while (rs.next()) {
-                if (rs.getString(1).equals(cash_number)) {
+            ResultSet rs_check = statement.executeQuery(selectCashNumberSQL);
+            while (rs_check.next()) {
+                if (rs_check.getString(1).equals(cash_number)) {
                     isCashNumber = true;
+                }
+            }
+            if (isCashNumber) {
+                ResultSet rs_storage = statement.executeQuery(selectStorageSQL);
+                while (rs_storage.next()) {
+                    storage = Integer.parseInt(rs_storage.getString(1));
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return isCashNumber;
+        return storage;
     }
 
 
